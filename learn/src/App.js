@@ -16,18 +16,17 @@ function App() {
   //   setPopular(movies.results);
   // }
   useEffect(() => {
-    fetchPopular()
+    const data = fetchPopular()
     .then(res => {
-
-      console.log(res);
+      // console.log(res);
       res && setPopular(res)
     })
-    // setPopular(fetchPopular());
+    // console.log(data);
   }, [])
   return (
     <div className="App">
       <h1>HELLO</h1>
-      <div className="popularMovies">
+      <div className="popularMovies" data-testid="popular">
         {popular.map(movie => <Movie key={movie.id} movie={movie}/>)}
       </div>
     </div>
