@@ -1,6 +1,6 @@
 import { PokimonService } from './pokimon.service';
 import { Component, OnInit } from '@angular/core';
-import { pipe } from 'rxjs';
+import { switchMap,map} from 'rxjs';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,12 +13,18 @@ export class AppComponent implements OnInit {
     this.getData();
   }
 
-  data: any;
+  data: any = [];
   items: any;
   getData(): void {
-    this.pokimon.getData('https://pokeapi.co/api/v2/pokemon?limit=10').subscribe(async (res) => {
-      this.data = Promise.all(this.items = res.results.map((e:any) => this.pokimon.getData(e.url)))
-      // this.data = res.results;
-    });
+    this.pokimon.getData('https://pokeapi.co/api/v2/pokemon?limit=200&offset=20').pipe(
+      switchMap(data => data.results),
+      map((elem: any) => this.pokimon.getData(elem.url)
+      .subscribe(result => {this.data.push({img : result.sprites.other.dream_world.front_default, name: result.name})}))
+    ).subscribe();
+  }
+
+  displayPokimon(poki: any): void {
+    
+    console.log(poki);
   }
 }
